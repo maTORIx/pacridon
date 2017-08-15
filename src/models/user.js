@@ -12,7 +12,6 @@ class User extends Record{
   }
 
   toots() {
-    console.log([1,2].reverse().reverse());
     return (new Collection(Toot)).where({user_id: this.data.id});
   }
 }

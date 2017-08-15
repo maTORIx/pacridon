@@ -19,7 +19,6 @@ class Collection {
   }
 
   where(value) {
-    console.log(value)
     let assigned = this.clone();
     assigned._where = Object.assign(assigned._where, value);
     return assigned;
@@ -36,7 +35,6 @@ class Collection {
         sqlValues.push(key, this._where[key]);
       })
       sqlParts.push(wheres.join(" AND "));
-      console.log(sqlParts.join(" "))
     }
     return new Promise((resolve, reject) => {
       db.query(sqlParts.join(" "), sqlValues).then((result) => {
