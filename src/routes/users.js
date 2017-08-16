@@ -36,29 +36,30 @@ module.exports = function(app) {
   app.get("/login", function(req, res) {
     res.render("login");
   });
+
   app.post("/login", function(req, res) {
     var password = req.body.password;
     var email = req.body.email;
-    var user = (new Collection(User)).where({email: email}).then((user) => {
-      if(user.length != 0){
-        var data = user[0].data;
-        var salt = data.salt;
-        console.log(data);
-        var hash = crypto.createHash("sha512");
-        hash.update(salt);
-        hash.update(password);
-        var hashData = hash.digest("hex");
-        if(data.password === hashData) {
-          res.cookie("userID", data.id);
-          res.send("SUCCESS");
-        } else {
-          res.redirect("/login");
-        }
-      } else {
-        res.redirect("/login")
+
+    User.collection().where({email: email}).then((users) => {
+      if(users.length < 1) {
+        throw new Error("User not found");
       }
+
+      let user = users[0];
+      let salt = user.data.salt;
+      var hash = crypto.createHash("sha512");
+      hash.update(salt);
+      hash.update(password);
+      var hashData = hash.digest("hex");
+
+      if(hashData !== user.data.password) {
+        throw new Error("password is not match");
+      }
+
+      res.redirect("/");
     }).catch((err) => {
-      res.redirect("/login")
+      res.render("login", {error: true});
     })
   });
 

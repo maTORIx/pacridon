@@ -1,12 +1,25 @@
 const db = require("../db");
+const Collection = require("./collection");
 
 class Record {
+  static collection() {
+    return new Collection(this);
+  }
+
   static tableName() {
-    new Error("You should override this method");
+    throw new Error("You should override this method");
   }
 
   static columns() {
-    new Error("You should override this method");
+    throw new Error("You should override this method");
+  }
+
+  static updateColumns() {
+    return this.columns();
+  }
+
+  static insertColumns() {
+    return this.columns();
   }
 
   static find(id) {
@@ -47,28 +60,29 @@ class Record {
   update() {
     let sqlValues = [this.constructor.tableName()];
     // sqlValues.push(this.constructor.columns());
-    attributes = {}
-    this.constructor.columns().forEach((column) => {
+    let attributes = {}
+    this.constructor.updateColumns().forEach((column) => {
       attributes[column] = this.data[column];
     });
     sqlValues.push(attributes);
     sqlValues.push(this.data.id);
     return new Promise((resolve, reject) => {
       db.query(
-        "UPDATE ?? SET ?? WHERE id = ?",
+        "UPDATE ?? SET ? WHERE id = ?",
         sqlValues
       ).then((result) => {
         resolve(this);
+        return;
       }).catch((err) => {
-        reject(error);
+        reject(err);
       })
     })
   }
 
   insert() {
     let sqlValues = [this.constructor.tableName()];
-    sqlValues.push(this.constructor.columns());
-    let attributes = this.constructor.columns().map((column) => {
+    sqlValues.push(this.constructor.insertColumns());
+    let attributes = this.constructor.insertColumns().map((column) => {
       return this.data[column];
     });
     sqlValues.push(attributes);
@@ -79,7 +93,9 @@ class Record {
       ).then((result) => {
         let info = result[0];
         let fields = result[1];
-        this.data.id = info.insertId;
+        if(this.data.id === undefined || this.data.id === null) {
+          this.data.id = info.insertId;
+        }
         resolve(this);
       }).catch((error) => {
         reject(error);
