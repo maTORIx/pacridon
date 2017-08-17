@@ -37,6 +37,30 @@ class User extends Record{
       });
     });
   }
+
+  static authenticate(email, raw_password) {
+    return new Promise((resolve, reject) => {
+      this.collection().where({email: email}).then((users) => {
+        if(users.length < 1) {
+          throw new Error("User not found");
+        }
+
+        let user = users[0];
+        let salt = user.data.salt;
+        var hash = crypto.createHash("sha512");
+        hash.update(salt);
+        hash.update(raw_password);
+        var hashed_password = hash.digest("hex");
+
+        if(hashed_password !== user.data.password) {
+          throw new Error("password is not match");
+        }
+        resolve(user);
+      }).catch((err) => {
+        reject(err);
+      })
+    })
+  }
 }
 
 module.exports = User;
