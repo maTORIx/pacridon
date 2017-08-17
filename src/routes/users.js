@@ -19,20 +19,12 @@ module.exports = function(app) {
     var password = req.body.password;
     var email = req.body.email;
     var nickname = req.body.nickname;
-    var salt = crypto.randomBytes(8).toString("hex");
-    var hash = crypto.createHash("sha512");
-    console.log(salt);
-    hash.update(salt);
-    hash.update(password);
-    var hashData = hash.digest("hex");
-
-    user = new User({password: hashData, email: email, nickname: nickname, salt: salt})
-    user.save().then((result) => {
-      res.redirect(302, "/login");
+    User.create(nickname, email, password).then(() => {
+      res.redirect("/login");
     }).catch((err) => {
       console.log(err);
-      res.status(409).send("nickname または email アドレスが重複しています。");
-    })
+      res.redirect("/signup");
+    });
   });
   app.get("/login", function(req, res) {
     res.render("login");
