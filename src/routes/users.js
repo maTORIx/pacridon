@@ -47,6 +47,7 @@ module.exports = function(app) {
       res.redirect("/");
     }).catch((err) => {
       console.log(err);
+      console.log("NOT OK");
       res.render("login", {error: true});
     })
   });

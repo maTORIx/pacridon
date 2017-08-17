@@ -1,0 +1,16 @@
+extends layout.pug
+
+block head
+  title pacridon
+  //- link(rel="stylesheet" href="/css/style.css")
+
+block content
+  .low
+    .col-md-6.col-md-offset-3
+      .page-header
+        h1 ユーザーログイン
+      form(action="/new_toot" method="post")
+        .form-group
+          textarea.form-control(name="toot" placeholder="今何してる?" required)
+        .form-group
+          input.btn.btn-primary.btn-block(type="submit" value="TOOT!!")
