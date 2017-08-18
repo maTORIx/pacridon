@@ -13,4 +13,9 @@ block content
         .form-group
           textarea.form-control(name="toot" placeholder="今何してる?" required)
         .form-group
-          input.btn.btn-primary.btn-block(type="submit" value="TOOT!!")
+          input.btn.btn-primary.btn-block(type="submit" value="T O O T ! !")
+      
+      .panel-group
+        each toot in toots
+          .panel.panel-default
+            .panel-body= toot.data.body

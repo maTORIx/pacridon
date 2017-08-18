@@ -8,7 +8,16 @@ module.exports = function(app) {
       res.redirect("/login");
       return;
     }
-    res.render("timeline");
+
+    UserSession.find(req.signedCookies.session_id).then((session) => {
+      return User.find(session.data.user_id)
+    }).then((user) => {
+      return user.toots();
+    }).then((toots) => {
+      res.render("timeline", {toots: toots.reverse()});
+    }).catch((err) => {
+      res.render("timeline", {error: error});
+    })
   });
 
   app.post("/new_toot", function(req, res) {
