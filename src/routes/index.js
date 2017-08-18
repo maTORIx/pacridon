@@ -4,16 +4,11 @@ const UserSession = require("../models/user_session");
 
 module.exports = function(app) {
   app.get("/", function(req, res) {
-    if(!(req.signedCookies.session_id)) {
+    if(!(res.locals.currentUser)) {
       res.redirect("/login");
       return;
     }
-
-    UserSession.find(req.signedCookies.session_id).then((session) => {
-      return User.find(session.data.user_id)
-    }).then((user) => {
-      return user.toots();
-    }).then((toots) => {
+    res.locals.currentUser.toots().then((toots) => {
       res.render("timeline", {toots: toots.reverse()});
     }).catch((err) => {
       res.render("timeline", {error: error});
@@ -21,11 +16,12 @@ module.exports = function(app) {
   });
 
   app.post("/new_toot", function(req, res) {
-    UserSession.find(req.signedCookies.session_id).then((session) => {
-      return User.find(session.data.user_id)
-    }).then((user) => {
-      return Toot.create(user, req.body.toot);
-    }).then(() => {
+    if(!(res.locals.currentUser)) {
+      res.redirect("/login");
+      return;
+    }
+
+    Toot.create(res.locals.currentUser, req.body.toot).then(() => {
       res.redirect("/");
     }).catch((err) => {
       console.log(err);
