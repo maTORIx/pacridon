@@ -13,7 +13,23 @@ block content
         .form-group
           input.btn.btn-primary.btn-block(type="submit" value="T O O T ! !")
       
-      .panel-group
+      #toots.panel-group
         each toot in toots
           .panel.panel-default
             .panel-body= toot.data.body
+
+  script.
+    window.addEventListener("DOMContentLoaded", function() {
+      var toots = document.getElementById("toots");
+      var ws = new WebSocket("ws://localhost:8000/api/timeline");
+      ws.addEventListener("message", function(event) {
+        var toot = JSON.parse(event.data);
+        var panel = document.createElement("div");
+        panel.className = "panel panel-default";
+        var panelBody = document.createElement("div");
+        panelBody.className = "panel-body";
+        panelBody.innerText = toot.body;
+        panel.appendChild(panelBody);
+        toots.insertBefore(panel, toots.firstChild);
+      })
+    })
