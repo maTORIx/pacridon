@@ -1,6 +1,8 @@
 const express = require("express");
 let app = express();
 
+const expressWs = require("express-ws");
+expressWs(app);
 //middle wear settings]
 const path = require("path");
 app.set("view engine", "pug");
