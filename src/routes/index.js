@@ -8,26 +8,8 @@ module.exports = function(app) {
       res.redirect("/login");
       return;
     }
-    res.locals.currentUser.toots().then((toots) => {
-      res.render("timeline", {toots: toots.reverse()});
-    }).catch((err) => {
-      res.render("timeline", {error: error});
-    })
+    res.render("timeline");
   });
-
-  app.post("/new_toot", function(req, res) {
-    if(!(res.locals.currentUser)) {
-      res.redirect("/login");
-      return;
-    }
-
-    Toot.create(res.locals.currentUser, req.body.toot).then(() => {
-      res.redirect("/");
-    }).catch((err) => {
-      console.log(err);
-      res.render("/");
-    })
-  })
   require("./users")(app);
   require("./api")(app);
 }
