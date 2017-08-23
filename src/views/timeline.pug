@@ -13,6 +13,10 @@ block content
         .form-group
           input.btn.btn-primary.btn-block(type="submit" value="T O O T ! !")
       
-      #toots.panel-group
-          .panel.panel-default(v-for="toot in toots")
-            .panel-body {{ toot.body }}
+      #toots
+        .media(v-for="toot in toots")
+          .media-body
+            .pull-right
+              button.btn.btn-danger.btn-xs
+                .i.glyphicon.glyphicon-trash
+            |{{ toot.body }}

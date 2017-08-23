@@ -7,7 +7,7 @@ module.exports = function(app) {
       return;
     }
 
-    res.locals.currentUser.toots().then((toots) => {
+    res.locals.currentUser.toots().order("id", "desc").then((toots) => {
       res.json(toots.map((toot) => {
         return toot.data;
       }))
@@ -27,6 +27,24 @@ module.exports = function(app) {
     }).catch((err) => {
       console.log(err);
       res.status(500).json({error: err.toString()});
+    })
+  })
+
+  app.delete("api/toots/:id", function(req, res) {
+    if(!res.locals.currentUser){
+      res.status(401).json({"error": "Unauthorized"});
+      return;
+    }
+
+    res.locals.currentUser.toots().where({
+      id: req.params.id
+    }).then((toots) => {
+      if(toots.length > 0) {
+        toots[0].destroy();
+      }
+      res.head(200);
+    }).catch((err) => {
+      res.status(500).json({"error": err.toString()});
     })
   })
 }

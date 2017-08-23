@@ -103,6 +103,20 @@ class Record {
     })
   }
 
+  destroy() {
+    return new Promise((resolve, reject) => {
+      db.query(
+        "DELETE FROM ?? WHERE `id` = ?",
+        [this.constructor.tableName(), this.data.id]
+      ).then(() => {
+        this.data.id = null;
+        resolve(this);
+      }).catch((err) => {
+        reject(err);
+      });
+    });
+  }
+
   toJSON() {
     return JSON.stringify(this.data);
   }
