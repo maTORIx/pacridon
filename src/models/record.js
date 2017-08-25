@@ -117,8 +117,12 @@ class Record {
     });
   }
 
+  asJSON() {
+    return this.data;
+  }
+
   toJSON() {
-    return JSON.stringify(this.data);
+    return JSON.stringify(this.asJSON());
   }
 }
 

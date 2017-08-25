@@ -17,6 +17,6 @@ block content
         .media(v-for="toot in toots")
           .media-body
             .pull-right
-              button.btn.btn-danger.btn-xs
+              button.btn.btn-danger.btn-xs(v-on:click="deleteToot($event, toot.id)")
                 .i.glyphicon.glyphicon-trash
             |{{ toot.body }}

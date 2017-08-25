@@ -105,7 +105,7 @@ domready(function () {
     },
     methods: {
       postToot: function postToot(event) {
-        event.preventDefault();
+        event.preventDefault(); // デフォルトの挙動をキャンセルする。この場合、submitによる再読み込みをキャンセルする。
         var fd = new URLSearchParams();
         fd.set("toot", this.newToot.body);
 
@@ -117,6 +117,28 @@ domready(function () {
           return response.json();
         }).then(function (data) {
           console.log(data);
+        }).catch(function (err) {
+          console.error(err);
+        });
+        this.newToot.body = "";
+      },
+      deleteToot: function deleteToot(event, id) {
+        for (var i = 0; i < this.toots.length; i++) {
+          if (this.toots[i].id === id) {
+            this.toots.splice(i, 1);
+            break;
+          }
+        }
+        if (!event) {
+          return;
+        }
+
+        event.preventDefault();
+        fetch("/api/toots/" + id, {
+          credentials: "same-origin",
+          method: "DELETE"
+        }).then(function (data) {
+          // console.log(data);
         }).catch(function (err) {
           console.error(err);
         });
@@ -136,7 +158,16 @@ domready(function () {
 
   var ws = new WebSocket("ws://localhost:8000/api/timeline");
   ws.addEventListener("message", function (event) {
-    vm.toots.unshift(JSON.parse(event.data));
+    var message = JSON.parse(event.data);
+    switch (message.action) {
+      case "create":
+        vm.toots.unshift(message.toot);
+        break;
+      case "delete":
+        vm.deleteToot(null, message.toot.id);
+        break;
+    }
+    // vm.toots.unshift(JSON.parse(event.data));
   });
 });
 

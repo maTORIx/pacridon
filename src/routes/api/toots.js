@@ -30,7 +30,7 @@ module.exports = function(app) {
     })
   })
 
-  app.delete("api/toots/:id", function(req, res) {
+  app.delete("/api/toots/:id", function(req, res) {
     if(!res.locals.currentUser){
       res.status(401).json({"error": "Unauthorized"});
       return;
@@ -42,7 +42,7 @@ module.exports = function(app) {
       if(toots.length > 0) {
         toots[0].destroy();
       }
-      res.head(200);
+      res.status(200).end();
     }).catch((err) => {
       res.status(500).json({"error": err.toString()});
     })
