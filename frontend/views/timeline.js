@@ -56,12 +56,34 @@ domready(function() {
     }
   })
 
-  fetch("/api/toots", {
+  function getText(id){
+    var url = "/api/user/" + id;
+    console.log(url);
+    var request = createXMLHttpRequest();
+    request.open("GET", url, true);
+    request.send("");
+  }
+
+  let currentURL = window.location.href.substring(21);
+  let sourceURL = "";
+  if(currentURL === "/") {
+    sourceURL = "/api/toots"
+  } else {
+    sourceURL = "/api" + currentURL + "/toots"
+  }
+  console.log(currentURL);
+  console.log(sourceURL);
+
+  fetch(sourceURL, {
     credentials: "same-origin",
   }).then((response) => {
     return response.json();
-  }).then((data) => {
-    vm.toots = data;
+  }).then((toots) => {
+    toots = toots.map(function(data) {
+      data.user_nickname = getText(data.user_id);
+      return data;
+    })
+    vm.toots = toots;
   }).catch((err) => {
     console.error(err)
   })

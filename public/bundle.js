@@ -146,12 +146,34 @@ domready(function () {
     }
   });
 
-  fetch("/api/toots", {
+  function getText(id) {
+    var url = "/api/user/" + id;
+    console.log(url);
+    var request = createXMLHttpRequest();
+    request.open("GET", url, true);
+    request.send("");
+  }
+
+  var currentURL = window.location.href.substring(21);
+  var sourceURL = "";
+  if (currentURL === "/") {
+    sourceURL = "/api/toots";
+  } else {
+    sourceURL = "/api" + currentURL + "/toots";
+  }
+  console.log(currentURL);
+  console.log(sourceURL);
+
+  fetch(sourceURL, {
     credentials: "same-origin"
   }).then(function (response) {
     return response.json();
-  }).then(function (data) {
-    vm.toots = data;
+  }).then(function (toots) {
+    toots = toots.map(function (data) {
+      data.user_nickname = getText(data.user_id);
+      return data;
+    });
+    vm.toots = toots;
   }).catch(function (err) {
     console.error(err);
   });

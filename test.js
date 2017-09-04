@@ -1,6 +1,5 @@
-const UserSession = require("./src/models/user_session");
-const Toot = require("./src/models/toot")
-const User = require("./models/user")
+const Collection = require("./src/models/collection");
+const User = require("./src/models/user")
 
 // let session = new UserSession({ user_id: 1});
 // session.save().then((s) => {
@@ -11,10 +10,10 @@ const User = require("./models/user")
 //   })
 // })
 
-for(var i = 0;i < 100;i++) {
-  User.authenticate("aaa@aaa.aaa", "aaa").then((user) => {
-    return Toot.create(user, i)
-  }).catch((err) => {
-    console.error(err)
-  })
-}
+new Collection(User).where({id: 1}).then((users) => {
+  users.forEach(function(element) {
+    console.log(element);
+  });
+}).catch((err) => {
+  console.log(err)
+})
