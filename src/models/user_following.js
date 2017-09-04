@@ -1,4 +1,6 @@
-const Record = ("./record");
+const db = require("../db");
+const Record = require("./record");
+const redis = require("../redis");
 
 class UserSession extends Record {
   static tableName() {

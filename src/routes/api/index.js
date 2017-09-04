@@ -5,4 +5,5 @@ module.exports = function(app) {
   require("./timeline")(app);
   require("./toots")(app);
   require("./user")(app);
+  require("./followings")(app);
 }

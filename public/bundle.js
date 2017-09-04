@@ -146,31 +146,30 @@ domready(function () {
     }
   });
 
-  function getText(id) {
-    var url = "/api/user/" + id;
-    console.log(url);
-    var request = createXMLHttpRequest();
-    request.open("GET", url, true);
-    request.send("");
-  }
+  // function getText(id){
+  //   var url = "/api/user/" + id;
+  //   console.log(url);
+  //   var request = createXMLHttpRequest();
+  //   request.open("GET", url, true);
+  //   request.send("");
+  // }
 
-  var currentURL = window.location.href.substring(21);
-  var sourceURL = "";
-  if (currentURL === "/") {
-    sourceURL = "/api/toots";
-  } else {
-    sourceURL = "/api" + currentURL + "/toots";
-  }
-  console.log(currentURL);
-  console.log(sourceURL);
+  // let currentURL = window.location.href.substring(21);
+  // let sourceURL = "";
+  // if(currentURL === "/") {
+  //   sourceURL = "/api/toots"
+  // } else {
+  //   sourceURL = "/api" + currentURL + "/toots"
+  // }
+  // console.log(currentURL);
+  // console.log(sourceURL);
 
-  fetch(sourceURL, {
+  fetch("/api/toots", {
     credentials: "same-origin"
   }).then(function (response) {
     return response.json();
   }).then(function (toots) {
     toots = toots.map(function (data) {
-      data.user_nickname = getText(data.user_id);
       return data;
     });
     vm.toots = toots;

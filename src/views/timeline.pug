@@ -7,6 +7,10 @@ block head
 block content
   #timeline.row
     .col-md-6.col-md-offset-3
+      form(action="/followings/7" method="post")
+        .form-group
+          input.btn.btn-primary.btn-block(type="submit" value="follow ! !")
+    .col-md-6.col-md-offset-3
       form(v-on:submit="postToot")
         .form-group
           textarea.form-control(v-model="newToot.body" name="toot" placeholder="今何してる?" required)
@@ -19,6 +23,6 @@ block content
               .pull-right
                 button.btn.btn-danger.btn-xs(v-on:click="deleteToot($event, toot.id)")
                   .i.glyphicon.glyphicon-trash
-              |{{toot.user_nickname}}
+              |{{toot.user_id}}
             .panel-body
               |{{ toot.body }}
