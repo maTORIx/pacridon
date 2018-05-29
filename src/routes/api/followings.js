@@ -11,7 +11,7 @@ module.exports = function(app) {
 
     targetId = req.params.id;
 
-    new Following({user_id : res.locals.currentUser.data.id, target_id : targetId}).save().then((following) => {
+    Following.create(res.locals.currentUser, targetId).then((following) => {
       res.json({following: following.data});
     }).catch((err) => {
       console.log(err);

@@ -63,21 +63,21 @@ module.exports = function(app) {
     })
   })
 
-  app.get("/api/:user/toots", function(req, res) {
-    new Collection(User).where({nickname: req.params.user}).then((users) => {
-      if(!(users.length)) {
-        res.status("404").send("User not found");
-        return;
-      }
-      users[0].toots().order("id", "desc").then((toots) => {
-      res.json(toots.map((toot) => {
-        return toot.data;
-      }))
-      }).catch((error) => {
-        res.status(500).json({ error: error.toString });
-      }) 
-    }).catch((err) => {
-      console.error(err);
-    })
-  })
+  // app.get("/api/:user/toots", function(req, res) {
+  //   new Collection(User).where({nickname: req.params.user}).then((users) => {
+  //     if(!(users.length)) {
+  //       res.status("404").send("User not found");
+  //       return;
+  //     }
+  //     users[0].toots().order("id", "desc").then((toots) => {
+  //     res.json(toots.map((toot) => {
+  //       return toot.data;
+  //     }))
+  //     }).catch((error) => {
+  //       res.status(500).json({ error: error.toString });
+  //     }) 
+  //   }).catch((err) => {
+  //     console.error(err);
+  //   })
+  // })
 }
